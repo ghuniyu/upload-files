@@ -19,54 +19,61 @@ public class AutoCorrection {
         String key;
         System.out.print("Insert Jumlah Soal : ");
         divider = in.nextByte();
+        System.out.printf("Nilai Persoal : %f\n\n", (100.0 / divider));
         System.out.print("Insert Key : ");
         if ((key = in.next().toLowerCase()).length() != divider) {
             System.out.printf("Your Key Must be exact %d", divider);
             return;
         }
         keyCh = key.toCharArray();
-        System.out.printf("Key : %s [NOT CASE-SENSITIVE]\n\n", key);
+        System.out.printf("Key : %s [NOT CASE-SENSITIVE]\n", key);
         checker(getFiles());
     }
 
     private static File[] getFiles() {
         URL location = AutoCorrection.class.getProtectionDomain().getCodeSource().getLocation();
 
-        File folder = new File(location.toString().replace("\\", "/").replace("file:/", ""));
+        File folder = new File(String.format("/%s",location.toString().replace("\\", "/").replace("file:/", "")));
+        System.out.println(location.toString().replace("\\", "/").replace("file:/", ""));
         return folder.listFiles();
     }
 
     private static void checker(File[] listOfFiles) {
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile() && listOfFile.getName().contains(".txt")) {
-                try {
-                    String line;
-                    int score = 0;
-                    BufferedReader bufferedReader = new BufferedReader(new FileReader(listOfFile));
-                    while ((line = bufferedReader.readLine()) != null) {
-                        if (line.length() != 0) {
-                            line = line.replace(".", "").replace(" ", "").replace("-", "");
-                            try {
-                                char ans = line.toLowerCase().toCharArray()[line.length() - 1];
-                                int i = Integer.parseInt(line.substring(0, line.length() - 1));
+        try {
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile() && listOfFile.getName().contains(".txt")) {
+                    try {
+                        String line;
+                        double score = 0;
+                        BufferedReader bufferedReader = new BufferedReader(new FileReader(listOfFile));
+                        while ((line = bufferedReader.readLine()) != null) {
+                            if (line.length() != 0) {
+                                line = line.replace(".", "").replace(" ", "").replace("-", "");
                                 try {
-                                    if (keyCh[i - 1] == ans)
-                                        int per = 100/divider;
-                                        score += per;
-                                } catch (ArrayIndexOutOfBoundsException a) {
+                                    char ans = line.toLowerCase().toCharArray()[line.length() - 1];
+                                    int i = Integer.parseInt(line.substring(0, line.length() - 1));
+                                    try {
+                                        if (keyCh[i - 1] == ans) {
+                                            int per = 100 / divider;
+                                            score += per;
+                                        }
+                                    } catch (ArrayIndexOutOfBoundsException a) {
+                                        System.out.println("Skipped");
+                                    }
+                                } catch (NumberFormatException e) {
                                     System.out.println("Skipped");
                                 }
-                            } catch (NumberFormatException e) {
+                            } else
                                 System.out.println("Skipped");
-                            }
-                        } else
-                            System.out.println("Skipped");
+                        }
+                        System.out.printf("NIM : %s \nScore : %f\n\n", listOfFile.getName().replace(".txt", ""), score);
+                    } catch (IOException p) {
+                        p.printStackTrace();
                     }
-                    System.out.printf("NIM : %s \nScore : %d\n\n", listOfFile.getName().replace(".txt", ""), score);
-                } catch (IOException p) {
-                    p.printStackTrace();
                 }
             }
+        } catch (NullPointerException e) {
+            System.err.println("There's no File TXT in this directory");
         }
     }
 }
