@@ -16,9 +16,11 @@ public class AutoCorrection {
     public static void main(String[] tot) {
         Scanner in = new Scanner(System.in);
         String key;
+        System.out.print("Insert Jumlah Soal : ");
+        int n = in.nextByte();
         System.out.print("Insert Key : ");
-        if ((key = in.next().toLowerCase()).length() != 10) {
-            System.out.println("Your Key Must be 10");
+        if ((key = in.next().toLowerCase()).length() != n) {
+            System.out.printf("Your Key Must be exact %d", n);
             return;
         }
         keyCh = key.toCharArray();
@@ -41,11 +43,22 @@ public class AutoCorrection {
                     int score = 0;
                     BufferedReader bufferedReader = new BufferedReader(new FileReader(listOfFile));
                     while ((line = bufferedReader.readLine()) != null) {
-                        line = line.replace(".", "").replace(" ", "");
-                        char ans = line.toLowerCase().toCharArray()[line.length() - 1];
-                        int i = Integer.parseInt(line.substring(0, line.length() - 1));
-                        if (keyCh[i - 1] == ans)
-                            score += 10;
+                        if (line.length() != 0) {
+                            line = line.replace(".", "").replace(" ", "").replace("-", "");
+                            try {
+                                char ans = line.toLowerCase().toCharArray()[line.length() - 1];
+                                int i = Integer.parseInt(line.substring(0, line.length() - 1));
+                                try {
+                                    if (keyCh[i - 1] == ans)
+                                        score += 10;
+                                } catch (ArrayIndexOutOfBoundsException a) {
+                                    System.out.println("Skipped");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Skipped");
+                            }
+                        } else
+                            System.out.println("Skipped");
                     }
                     System.out.printf("NIM : %s \nScore : %d\n\n", listOfFile.getName().replace(".txt", ""), score);
                 } catch (IOException p) {
