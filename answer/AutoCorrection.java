@@ -12,15 +12,16 @@ import java.util.Scanner;
 
 public class AutoCorrection {
     private static char[] keyCh;
+    private static int divider;
 
     public static void main(String[] tot) {
         Scanner in = new Scanner(System.in);
         String key;
         System.out.print("Insert Jumlah Soal : ");
-        int n = in.nextByte();
+        divider = in.nextByte();
         System.out.print("Insert Key : ");
-        if ((key = in.next().toLowerCase()).length() != n) {
-            System.out.printf("Your Key Must be exact %d", n);
+        if ((key = in.next().toLowerCase()).length() != divider) {
+            System.out.printf("Your Key Must be exact %d", divider);
             return;
         }
         keyCh = key.toCharArray();
@@ -50,7 +51,8 @@ public class AutoCorrection {
                                 int i = Integer.parseInt(line.substring(0, line.length() - 1));
                                 try {
                                     if (keyCh[i - 1] == ans)
-                                        score += 10;
+                                        int per = 100/divider;
+                                        score += per;
                                 } catch (ArrayIndexOutOfBoundsException a) {
                                     System.out.println("Skipped");
                                 }
