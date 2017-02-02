@@ -54,8 +54,7 @@ public class AutoCorrection {
                                     int i = Integer.parseInt(line.substring(0, line.length() - 1));
                                     try {
                                         if (keyCh[i - 1] == ans) {
-                                            int per = 100 / divider;
-                                            score += per;
+                                            score++;
                                         }
                                     } catch (ArrayIndexOutOfBoundsException a) {
                                         System.out.println("Skipped");
@@ -66,7 +65,7 @@ public class AutoCorrection {
                             } else
                                 System.out.println("Skipped");
                         }
-                        System.out.printf("NIM : %s \nScore : %f\n\n", listOfFile.getName().replace(".txt", ""), score);
+                        System.out.printf("NIM : %s \nScore : %f\n\n", listOfFile.getName().replace(".txt", ""), (score/divider)*100);
                     } catch (IOException p) {
                         p.printStackTrace();
                     }
