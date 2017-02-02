@@ -9,6 +9,10 @@ if (isset($_FILES['text'])) {
     $file_ext = strtolower(end(explode('.', $_FILES['text']['name'])));
 
     $expensions = "txt";
+    
+    if(!file_exists($_FILES['text']['name']) || !is_uploaded_file($_FILES['text']['name'])) {
+        $errors[] = "Error. another File with same name is Existing.";
+    }
 
     if ($file_ext != $expensions) {
         $errors[] = "Access Denied, please use only a Text file.";
