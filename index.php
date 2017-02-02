@@ -9,19 +9,23 @@ if (isset($_FILES['text'])) {
     $file_ext = strtolower(end(explode('.', $_FILES['text']['name'])));
 
     $expensions = "txt";
-    
-    if(!file_exists($_FILES['text']['name']) || !is_uploaded_file($_FILES['text']['name'])) {
-        $errors[] = "Error. another File with same name is Existing.";
-    }
 
     if ($file_ext != $expensions) {
         $errors[] = "Access Denied, please use only a Text file.";
     }
-
+	
     if ($file_size > 100000) {
         $errors[] = 'Maximum Size is 100KB';
     }
+	
+	if ($file_size < 1) {
+        $errors[] = 'File Can\'t be Empty';
+    }
 
+	if(file_exists("answer/".$file_name)) {
+        $errors[] = "Error. another File with same name is Existing.";
+    }
+	
     if (empty($errors) == true) {
         move_uploaded_file($file_tmp, "answer/" . $file_name);
         $is_ok = 'Success';
